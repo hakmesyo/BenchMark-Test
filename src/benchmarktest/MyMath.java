@@ -19,7 +19,8 @@ public class MyMath {
     static {
         // a static initializer fills the table
         // in this implementation, units are in degrees
-        for (int i = 0; i < sin.length; i++) {
+        int n=sin.length;
+        for (int i = 0; i < n; i++) {
             sin[i] = (float) Math.sin((i * Math.PI) / (precision * 180));
         }
     }
