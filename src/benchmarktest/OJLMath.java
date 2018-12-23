@@ -9,7 +9,7 @@ package benchmarktest;
  *
  * @author BAP1
  */
-public class MyMath {
+public class OJLMath {
 
     static final int precision = 100; // gradations per degree, adjust to suit
 

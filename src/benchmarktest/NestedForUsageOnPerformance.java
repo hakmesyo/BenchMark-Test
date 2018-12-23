@@ -9,7 +9,7 @@ package benchmarktest;
  *
  * @author BAP1
  */
-public class JavaBenchMark {
+public class NestedForUsageOnPerformance {
 
     private static final int max = 10000;
     private static float[][] d = new float[max][max];
