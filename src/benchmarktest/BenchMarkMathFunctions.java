@@ -8,7 +8,7 @@ package benchmarktest;
 import java.util.SplittableRandom;
 public class BenchMarkMathFunctions {
 
-    private static final int n = (int) 1e7;
+    private static final int n = (int) 1e6;
     private static final int defa = 100;
 
     public static void main(String[] args) {
@@ -18,8 +18,8 @@ public class BenchMarkMathFunctions {
     private static void startTest() {
         double mean = 0;
         for (int i = 0; i < defa; i++) {
-            mean += testMathFunction();
-//            mean+=testRandomFunction();
+//            mean += testMathFunction();
+            mean+=testRandomFunction();
 //            mean += testNestedForLoop();
         }
         mean = mean / defa;
@@ -67,7 +67,7 @@ public class BenchMarkMathFunctions {
         }
         long t2 = System.nanoTime();
         double elapsed = (t2 - t1) / 1e6;
-        System.out.println("elapsed time = " + elapsed+" sec");
+        System.out.println("elapsed time = " + elapsed+" ms");
         return elapsed;
     }
 
@@ -82,7 +82,7 @@ public class BenchMarkMathFunctions {
         }
         long t2 = System.nanoTime();
         double elapsed = (t2 - t1) / 1e6;
-        System.out.println("elapsed time = " + elapsed+" sec");
+        System.out.println("elapsed time = " + elapsed+" ms");
         return elapsed;
     }
 }

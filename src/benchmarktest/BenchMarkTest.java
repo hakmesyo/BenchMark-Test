@@ -1,150 +1,107 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package benchmarktest;
 
-import cezeri.matrix.CMatrix;
-import cezeri.utils.FactoryUtils;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.SplittableRandom;
 
-/**
- *
- * @author BAP1
- */
+
 public class BenchMarkTest {
-
-    /**
-     * @param args the command line arguments
-     */
-    static int max = 10000;
-    static int defa = 50;
+    static int max = 1000;
+    static int defa = 100;
     
-    static byte[][] sd = new byte[max][max];
+    static float[][] sd = new float[max][max];
 
     public static void main(String[] args) {
-//        warmupJVM();
         nativeJavaTest();
-//        oclTest();
     }
 
-    private static void oclTest() {
-//        double t=0;
-//        for (int i = 0; i < defa; i++) {
-//            long t1 = FactoryUtils.tic();
-//            CMatrix.getInstance()
-//                    .tic()   
-//                    //.setArray(sd)
-//                    .toc()                
-//                    .addScalar(21)
-//                    .toc()
-////                    .tic()
-//                    //.rand(max, max, 0, 100)
-////                    .toc()
-//                    ;
-//            long t2=FactoryUtils.tic();
-//            double et= (t2-t1)/1000000.0;
-//            System.out.println("elapsed time = " + et);
-//            t+=et;
-//        }
-//        t=t/defa;
-//        System.out.println("average elapsed time = " + t);
-
-    }
-
-//*****************************************************************************
-//    JAVA CODE  random 1000x1000 takes 0.11 sec
-//*****************************************************************************
-
+//*************************************************************************************************************
+//    JAVA CODE   1000x1000 add scalar takes 1.5 ms, math random takes 32 ms, Splittable random takes 15 ms
+//*************************************************************************************************************
     private static void nativeJavaTest() {
         double t = 0;
         for (int i = 0; i < defa; i++) {
-//            t += generateArray(max);
-            t += populateArray();
+            t += testSplittableRandomFunction();
+//            t += testMathRandomFunction();
+//            t += testAddScalar();
         }
         t = t / defa;
-        System.out.println("ortalama süre = " + t / 1000 + " sn");
+        System.out.println("Average elapsed time = " + t + " ms");
     }
-
-    private static void warmupJVM() {
-        for (int i = 0; i < 1000; i++) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(BenchMarkTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    private static double generateArray(int max) {
-        long t1 = FactoryUtils.tic();
-        double[][] d = new double[max][max];
-        int nr = d.length;
-        int nc = d[0].length;
-        for (int i = 0; i < nr; i++) {
-            for (int j = 0; j < nc; j++) {
-//                d[i][j] = (int) (Math.random() * 101);
-                d[i][j]= d[i][j]+21;
-            }
-        }
-        long t2 = FactoryUtils.toc(t1);
-        double elapsed = (t2 - t1) / (1000000.0d);
-        return elapsed;
-    }
-    
-    private static double populateArray() {
-        long t1 = FactoryUtils.tic();
+   
+    private static double testAddScalar() {
+        long t1 = System.nanoTime();
         int nr = max;
         int nc = max;
         for (int i = 0; i < nr; i++) {
             for (int j = 0; j < nc; j++) {
-//                sd[i][j] = (float)(Math.random() * 101);
                 sd[i][j]+=21;
             }
         }
-        long t2 = FactoryUtils.toc(t1);
+        long t2 = System.nanoTime();
         double elapsed = (t2 - t1) / (1000000.0d);
+        System.out.println("elapsed = " + elapsed+ " ms");
+        return elapsed;
+    }
+    
+    private static double testMathRandomFunction() {
+        long t1 = System.nanoTime();
+        int nr = max;
+        int nc = max;
+        for (int i = 0; i < nr; i++) {
+            for (int j = 0; j < nc; j++) {
+                sd[i][j] = (float)(Math.random() * 101);
+            }
+        }
+        long t2 = System.nanoTime();
+        double elapsed = (t2 - t1) / (1000000.0d);
+        System.out.println("elapsed = " + elapsed+ " ms");
+        return elapsed;
+    }
+    
+    private static double testSplittableRandomFunction() {
+        long t1 = System.nanoTime();
+        int nr = max;
+        int nc = max;
+        SplittableRandom rnd = new SplittableRandom();
+        for (int i = 0; i < nr; i++) {
+            for (int j = 0; j < nc; j++) {
+                sd[i][j] = rnd.nextInt(0, 100);;
+            }
+        }
+        long t2 = System.nanoTime();
+        double elapsed = (t2 - t1) / (1000000.0d);
+        System.out.println("elapsed = " + elapsed+ " ms");
         return elapsed;
     }
 
 
 
 //*****************************************************************************
-//    PYTHON CODE  random 1000x1000 takes 0.154 sec
+//    PYTHON CODE  add scalar 1000x1000 takes 9.45 ms, random takes 154 ms
 //*****************************************************************************
 /*
 import timeit
 import numpy as np
 
-a=1
-b=1
-print("a=",a," b=",b)
-a,b=b,a
-print("a=",a," b=",b)
-
-for t in range(10):
-   a,b=b+a,a
-   print("a=",a);
-
 n=1000
 t=0
+defa=100
+y=np.zeros((n,n))
 
-for x in range(10):
-    start = timeit.default_timer()
-    y=np.random.randn(n,n)
+for x in range(defa):
+    start = timeit.default_timer()    
+    y=y+21
+    #y=np.random.randn(n,n)
     stop = timeit.default_timer()
     t+=(stop - start)
     print('Time: ', stop - start)  
 
-print('avg time=',t/10," sn")
+print('avg time=',t/defa*1000," ms")
 
 */
     
     
 //*****************************************************************************
-//    RUBY CODE  random 1000x1000 takes 0.82 sec
+//    RUBY CODE  1000x1000 random takes 820 ms
 //*****************************************************************************
 /*
 max=1000
@@ -158,7 +115,7 @@ end
 */
     
 //*****************************************************************************
-//    MATLAB CODE random 1000x1000 takes 0.045 sec
+//    MATLAB CODE  1000x1000 random takes 45 ms
 //*****************************************************************************
 /*
 clc;
@@ -172,7 +129,7 @@ end
 */
     
 //*****************************************************************************
-//    GNU C CODE random 1000x1000 takes 0.047 sec
+//    GNU C CODE  1000x1000 add scalar takes 2.8 ms, random takes 45 ms
 //*****************************************************************************
 /*
     
@@ -182,29 +139,105 @@ end
 #define MAX 1000
 
 float d[MAX][MAX];
+const int n=1e6;
+const int defa=1000;
 
+void test2DPerformance();
+void testPerformance();
+double testRandomPerformance();
+double testMathFunctionPerformance();
+double testAddScalarPerformance();
 
 int main()
 {
-    for(int i=0;i<10;i++){
+	testPerformance();
+	getchar();
+	return 0;
+}
+
+void testPerformance(){
+	double mean=0;
+	for (int i = 0; i < defa; i++)
+	{
+		//mean+=testAddScalarPerformance();
+		mean+=testRandomPerformance();
+		//mean+=testMathFunctionPerformance();
+	}
+	mean=mean/defa*1000;
+	printf("\naverage elapsed time taken=%f second\n",mean);
+}
+
+double testMathFunctionPerformance(){
+    double t=0;
+	clock_t t1=clock();
+	for (int i = 0; i < n; i++)
+	{
+		t+=sin(i);
+	}
+	clock_t t2=clock();
+	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
+    printf("elapsed time taken=%f\n",elapsed);
+	return elapsed;
+}
+
+double testRandomPerformance(){
+    double t=0;
+	clock_t t1=clock();
+	for (int i = 0; i < MAX; i++)
+	{
+	    for(int j=0;j<MAX;j++)
+        {
+            d[i][j]=rand()%101;
+        }
+	}
+	clock_t t2=clock();
+	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
+    printf("elapsed time taken=%f\n",elapsed);
+	return elapsed;
+}
+
+double testAddScalarPerformance(){
+    double t=0;
+	clock_t t1=clock();
+	for (int i = 0; i < MAX; i++)
+	{
+	    for(int j=0;j<MAX;j++)
+        {
+            d[i][j]+=21;
+        }
+	}
+	clock_t t2=clock();
+	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
+    printf("elapsed time taken=%f\n",elapsed);
+	return elapsed;
+}
+
+void test2DPerformance(){
+    double t=0;
+	for(int i=0;i<defa;i++){
         clock_t t1=clock();
 
         for(int j=0;j<MAX;j++){
             for(int k=0;k<MAX;k++){
-                d[j][k]=rand()%100;
+                //d[j][k]=rand()%100;
+				d[j][k]+=21;
             }
         }
 
         clock_t t2=clock();
         double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
         printf("elapsed time taken=%f\n",elapsed);
+		t+=elapsed;
     }
-    return 0;
+	t=t/defa;
+	printf("average elapsed time taken=%f\n",t);
 }
-*/
+
+
+    */
 
 //*****************************************************************************
-//    Visual Studio C++ CODE random 1000x1000 takes 0.061 sec
+//    Visual Studio C++ CODE  1000x1000 random takes 61 ms
 //*****************************************************************************
 /*
     
@@ -244,7 +277,7 @@ int _tmain(int argc, _TCHAR* argv[])
 */
 
 //*****************************************************************************
-//    Visual Studio C# CODE random 1000x1000 takes 0.128 sec
+//    Visual Studio C# CODE 1000x1000 random takes 128 ms
 //*****************************************************************************
 /*
 using System;
@@ -299,7 +332,7 @@ namespace ConsoleApplication3
 */
     
 //*****************************************************************************
-//    Open Cezeri Library DSL CODE random 1000x1000 takes 0.15 sec
+//    Open Cezeri Library DSL CODE  1000x1000 random takes 150 ms
 //*****************************************************************************
 /*
         for (int i = 0; i < 10; i++) {
@@ -312,36 +345,64 @@ namespace ConsoleApplication3
         }
 */
     
-//*****************************************************************************
-//    PYTHON CODE  random 1000x1000 takes 0.154 sec
-//*****************************************************************************
-/*
-import timeit
-import numpy as np
 
-a=1
-b=1
-print("a=",a," b=",b)
-a,b=b,a
-print("a=",a," b=",b)
+//******************************************************************************************
+//    PASCAL CODE (LAZARUS)  1000x1000 add scalar takes 13.6 ms, random takes 45.64 ms
+//******************************************************************************************
+/*    
+program Project1;
+uses crt,Dos,DateUtils, sysutils;
 
-for t in range(10):
-   a,b=b+a,a
-   print("a=",a);
+const
+  n=1000;
+  defa=100;
+Type
+  TA = Array[0..n,0..n] of Single;
+var
+  sd : TA;
+  i:Integer;
+  D1,D2 : TDateTime;
+  mean:double;
 
-n=10000
-t=0
-defa=50
-y=np.zeros((n,n))
-for x in range(defa):
-    start = timeit.default_timer()    
-    y=y+21
-    #y=np.random.randn(n,n)
-    stop = timeit.default_timer()
-    t+=(stop - start)
-    print('Time: ', stop - start)  
+Function ElapsedTime(ANow,AThen : TDateTime):Int64;
+var
+  ret:Int64;
+begin
+     ret:=MilliSecondsBetween(ANow,AThen);
+     Writeln('elapsed : ',ret);
+     Result:=ret;
+end;
 
-print('avg time=',t/defa," sn")
+procedure PopulateArray;
+var
+  i,j:Integer;
+  t1,t2:TDateTime;
+begin
+     t1:=Now;
+     for i:=0 to n do begin
+        for j:=0 to n do begin
+            sd[i,j]:=sd[i,j]+21;
+            //sd[i,j]:=random(100);
+        end;
+     end;
+     t2:=Now;
+     ElapsedTime(t1,t2);
+end;
+
+
+begin
+  D1:=Now;
+  for i := 0 to defa do
+  begin
+    PopulateArray;
+  end;
+  writeln();
+  D2:=Now;
+  mean:=ElapsedTime(D1,D2)/defa;
+  Writeln('average elapsed time ',mean);
+  readkey;
+end.
+
 
 */
 }
