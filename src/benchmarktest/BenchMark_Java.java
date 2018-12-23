@@ -1,5 +1,6 @@
 //*************************************************************************************************************
-//    JAVA CODE   1000x1000 add scalar takes 1.5 ms, math random takes 32 ms, Splittable random takes 14 ms
+//    JAVA CODE   1000x1000 add scalar takes 1.5 ms, math random takes 100 ms, Splittable random takes 14 ms, 
+//                fast sin function takes 38 ms, math sin function takes 240 ms
 //*************************************************************************************************************
 package benchmarktest;
 
@@ -18,9 +19,9 @@ public class BenchMark_Java {
     public static void main(String[] args) {
         double t = 0;
         for (int i = 0; i < DEFA; i++) {
-            t += testOJLMathSinFunction();
+//            t += testOJLMathSinFunction();
 //            t += testMathSinFunction();
-//            t += testSplittableRandomFunction();
+            t += testSplittableRandomFunction();
 //            t += testMathRandomFunction();
 //            t += testAddScalar();
         }

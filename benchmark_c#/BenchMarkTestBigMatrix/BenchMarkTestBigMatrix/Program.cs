@@ -1,16 +1,4 @@
-
-package benchmarktest;
-
-/**
- * @author Dr.Musa ATAŞ, cezerilab.com
- */
-public class BenchMark_CSharp {
-//*****************************************************************************
-//    Visual Studio C# CODE 1000x1000 random takes 70 ms, add scalar takes 19 ms
-//    math sin function takes 243 ms
-//*****************************************************************************
-/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,8 +19,8 @@ namespace BenchMarkTestBigMatrix
         {
             //call_for_for_for();
             //addScalar();
-            //testMatFunction();
-            addRandomNumber();
+            testMatFunction();
+            //addRandomNumber();
             
         }
 
@@ -163,7 +151,4 @@ namespace BenchMarkTestBigMatrix
         }
 
     }
-}
-
-*/    
 }

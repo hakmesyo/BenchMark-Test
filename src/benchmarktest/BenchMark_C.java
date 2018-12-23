@@ -5,6 +5,11 @@ package benchmarktest;
  * @author Dr.Musa ATAŞ, cezerilab.com
  */
 public class BenchMark_C {
+//*****************************************************************************
+//    GNU C CODE  1000x1000 random takes 47.18 ms, add scalar takes 2.81 ms , math sin takes 2.35 ms
+//*****************************************************************************
+    
+   
 /*
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,10 +17,8 @@ public class BenchMark_C {
 #define MAX 1000
 
 float d[MAX][MAX];
-const int n=1e6;
-const int defa=1000;
+const int defa=100;
 
-void test2DPerformance();
 void testPerformance();
 double testRandomPerformance();
 double testMathFunctionPerformance();
@@ -33,20 +36,23 @@ void testPerformance(){
 	for (int i = 0; i < defa; i++)
 	{
 		//mean+=testAddScalarPerformance();
-		mean+=testRandomPerformance();
-		//mean+=testMathFunctionPerformance();
+		//mean+=testRandomPerformance();
+		mean+=testMathFunctionPerformance();
 	}
 	mean=mean/defa*1000;
-	printf("\naverage elapsed time taken=%f second\n",mean);
+	printf("\naverage elapsed time taken=%f ms\n",mean);
 }
 
 double testMathFunctionPerformance(){
         double t=0;
 	clock_t t1=clock();
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < MAX; i++)
 	{
-		t+=sin(i);
-	}
+	    for(int j=0;j<MAX;j++)
+            {
+                d[i][j]=sin(i%360*3.14/180);
+            }
+        }
 	clock_t t2=clock();
 	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
         printf("elapsed time taken=%f\n",elapsed);
@@ -59,9 +65,9 @@ double testRandomPerformance(){
 	for (int i = 0; i < MAX; i++)
 	{
 	    for(int j=0;j<MAX;j++)
-        {
-            d[i][j]=rand()%101;
-        }
+            {
+                d[i][j]=rand()%101;
+            }
 	}
 	clock_t t2=clock();
 	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
@@ -75,9 +81,9 @@ double testAddScalarPerformance(){
 	for (int i = 0; i < MAX; i++)
 	{
 	    for(int j=0;j<MAX;j++)
-        {
-            d[i][j]+=21;
-        }
+            {
+                d[i][j]+=21;
+            }
 	}
 	clock_t t2=clock();
 	double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
@@ -85,25 +91,5 @@ double testAddScalarPerformance(){
 	return elapsed;
 }
 
-void test2DPerformance(){
-        double t=0;
-	for(int i=0;i<defa;i++){
-            clock_t t1=clock();
-
-            for(int j=0;j<MAX;j++){
-                for(int k=0;k<MAX;k++){
-                    //d[j][k]=rand()%100;
-                    d[j][k]+=21;
-                }
-            }
-
-            clock_t t2=clock();
-            double elapsed=((double) (t2 - t1)) / CLOCKS_PER_SEC;
-            printf("elapsed time taken=%f\n",elapsed);
-            t+=elapsed;
-        }
-	t=t/defa;
-	printf("average elapsed time taken=%f\n",t);
-}
 */    
 }
