@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="C:\lazarus\fpc\3.0.4\bin\x86_64-win64\fpc.exe" Date="1286836893"/>
-  <Params Value=" -Twin64 -MObjFPC -Scghi -O4 -l -vewnhibq -FiE:\Dropbox\NetbeansProjects\BenchMarkTest\benchmark_pascal\lib\x86_64-win64 -FuE:\Dropbox\NetbeansProjects\BenchMarkTest\benchmark_pascal\ -FUE:\Dropbox\NetbeansProjects\BenchMarkTest\benchmark_pascal\lib\x86_64-win64\ Project1.pas"/>
-</CONFIG>
