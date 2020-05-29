@@ -9,12 +9,12 @@ import java.util.SplittableRandom;
 /**
  * @author Dr.Musa ATAŞ, cezerilab.com
  */
-public class BenchMark_Java {
+public class BenchMark_Java_double {
 
-    private static final int MAX = 1000;
-    private static final int DEFA = 100;
+    private static final int MAX = 10000;
+    private static final int DEFA = 10;
 
-    static float[][] d = new float[MAX][MAX];
+    static double[][] d = new double[MAX][MAX];
 
     public static void main(String[] args) {
         double t = 0;

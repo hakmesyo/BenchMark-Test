@@ -4,7 +4,7 @@ import java.util.SplittableRandom;
 
 
 public class BenchMarkTest {
-    static int max = 1000;
+    static int max = 5000;
     static int defa = 100;
     
     static float[][] sd = new float[max][max];
@@ -19,14 +19,26 @@ public class BenchMarkTest {
     private static void nativeJavaTest() {
         double t = 0;
         for (int i = 0; i < defa; i++) {
-            t += testSplittableRandomFunction();
+//            t += testSplittableRandomFunction();
 //            t += testMathRandomFunction();
 //            t += testAddScalar();
+              t +=testMathFunction();
         }
         t = t / defa;
         System.out.println("Average elapsed time = " + t + " ms");
     }
    
+    private static double testMathFunction(){
+        long t1 = System.nanoTime();
+        for (int i = 0; i < max; i++) {
+            sinFunction();
+        }
+        long t2 = System.nanoTime();
+        double elapsed = (t2 - t1) / (1000000.0d);
+        System.out.println("elapsed = " + elapsed+ " ms");
+        return elapsed;
+    }
+    
     private static double testAddScalar() {
         long t1 = System.nanoTime();
         int nr = max;
@@ -405,4 +417,10 @@ end.
 
 
 */
+
+    private static void sinFunction() {
+        for (int i = 0; i < max; i++) {
+            sd[i][i]=(float)Math.sin((i % 360 * Math.PI / 180));
+        }
+    }
 }
