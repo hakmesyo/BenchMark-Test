@@ -1,11 +1,15 @@
 package benchmarktest;
 
+import cezeri.utils.MersenneTwister;
+import java.security.SecureRandom;
+import java.util.Random;
 import java.util.SplittableRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class BenchMarkTest {
     static int max = 5000;
-    static int defa = 100;
+    static int defa = 20;
     
     static float[][] sd = new float[max][max];
 
@@ -20,9 +24,9 @@ public class BenchMarkTest {
         double t = 0;
         for (int i = 0; i < defa; i++) {
 //            t += testSplittableRandomFunction();
-//            t += testMathRandomFunction();
+            t += testMathRandomFunction();
 //            t += testAddScalar();
-              t +=testMathFunction();
+//              t +=testMathFunction();
         }
         t = t / defa;
         System.out.println("Average elapsed time = " + t + " ms");
@@ -58,9 +62,14 @@ public class BenchMarkTest {
         long t1 = System.nanoTime();
         int nr = max;
         int nc = max;
+        Random rnd=new Random();
+//        Random rnd=new MersenneTwister();
+//        Random rnd=new SecureRandom();
+//        Random rnd=ThreadLocalRandom.current();
         for (int i = 0; i < nr; i++) {
             for (int j = 0; j < nc; j++) {
-                sd[i][j] = (float)(Math.random() * 101);
+//                sd[i][j] = (float)(Math.random() * 101);
+                sd[i][j] = rnd.nextFloat()*101f;
             }
         }
         long t2 = System.nanoTime();
@@ -68,6 +77,7 @@ public class BenchMarkTest {
         System.out.println("elapsed = " + elapsed+ " ms");
         return elapsed;
     }
+    
     
     private static double testSplittableRandomFunction() {
         long t1 = System.nanoTime();
@@ -423,4 +433,5 @@ end.
             sd[i][i]=(float)Math.sin((i % 360 * Math.PI / 180));
         }
     }
+
 }
